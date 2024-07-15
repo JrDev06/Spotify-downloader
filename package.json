@@ -14,15 +14,6 @@
   "engines": {
     "node": "14.x"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/JrDev06/spotify-music-downloader.git"
-  },
-  "keywords": [
-    "spotify",
-    "music",
-    "downloader"
-  ],
   "author": "Jr Busaco",
   "license": "MIT"
 }
