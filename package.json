@@ -1,19 +1,19 @@
 {
   "name": "spotify-music-downloader",
   "version": "1.0.0",
-  "description": "A web application for downloading music from Spotify",
+  "description": "A simple web app to search and download music from Spotify",
   "main": "index.js",
-  "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"  
   },
   "dependencies": {
     "express": "^4.18.2",
-    "node-fetch": "^3.2.0"
+    "node-fetch": "^2.6.7",
+    "cors": "^2.8.5"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": "14.x"  
   },
-  "author": "Jr Busaco",
   "license": "MIT"
 }
