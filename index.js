@@ -1,11 +1,9 @@
-import express from 'express';
-import fetch from 'node-fetch';
-import cors from 'cors';
+const express = require('express');
+const fetch = require('node-fetch');
 
 const app = express();
-const PORT = 3000; // Fixed port for Render
+const PORT = 3000; // Using a fixed port for Render compatibility
 
-app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
@@ -24,5 +22,5 @@ app.get('/search', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
