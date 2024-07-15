@@ -3,12 +3,11 @@ import fetch from 'node-fetch';
 import cors from 'cors';
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = 3000; // Fixed port
 
-// Middleware
-app.use(cors()); // Enable CORS
+app.use(cors());
 app.use(express.json());
-app.use(express.static('public')); // Serve static files from the 'public' directory
+app.use(express.static('public'));
 
 app.get('/search', async (req, res) => {
     const query = req.query.q;
@@ -16,9 +15,6 @@ app.get('/search', async (req, res) => {
 
     try {
         const response = await fetch(apiUrl);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
         const data = await response.json();
         res.json(data);
     } catch (error) {
