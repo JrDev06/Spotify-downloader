@@ -13,7 +13,7 @@
             color: #fff;
             padding: 20px;
             margin: 0;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -22,13 +22,11 @@
         h1 {
             text-align: center;
             margin-bottom: 20px;
-            animation: fadeInDown 1s;
         }
         #searchContainer {
             display: flex;
             justify-content: center;
             margin-bottom: 20px;
-            animation: fadeIn 1s;
         }
         #searchInput {
             padding: 10px;
@@ -38,10 +36,6 @@
             border-radius: 25px 0 0 25px;
             font-size: 16px;
             outline: none;
-            transition: box-shadow 0.3s;
-        }
-        #searchInput:focus {
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
         #searchButton {
             padding: 10px 20px;
@@ -51,18 +45,14 @@
             color: #fff;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        #searchButton:hover {
-            background-color: #1aa34a;
-            transform: scale(1.05);
         }
         #results {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
             margin-top: 20px;
-            animation: fadeIn 0.5s;
+            width: 100%;
+            max-width: 800px;
         }
         .songDiv {
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -70,91 +60,28 @@
             border-radius: 10px;
             background: rgba(255, 255, 255, 0.1);
             text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .songDiv:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-        }
-        img {
+        .songDiv img {
             width: 100px;
             border-radius: 10px;
             margin-bottom: 10px;
         }
-        .button-group {
-            display: flex;
-            justify-content: space-around;
-            gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-        .button-group a, .button-group button {
+        .button {
+            margin-top: 5px;
             padding: 10px 15px;
             border-radius: 5px;
             text-decoration: none;
-            transition: background-color 0.3s, transform 0.3s;
-            font-size: 14px;
-            cursor: pointer;
-            flex: 1;
-            margin: 5px;
-        }
-        .button-group a {
             background-color: #1db954;
             color: #fff;
+            display: inline-block;
         }
-        .button-group button {
-            background-color: #1db954;
-            color: #fff;
-            border: none;
-        }
-        .button-group a:hover, .button-group button:hover {
+        .button:hover {
             background-color: #1aa34a;
-            transform: translateY(-2px);
-        }
-        #audioPlayer {
-            margin-top: 20px;
-            width: 100%;
-            max-width: 400px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 10px;
-            display: none;
-        }
-        #errorMessage {
-            display: none;
-            margin-top: 20px;
-            padding: 10px;
-            background-color: rgba(255, 0, 0, 0.8);
-            border-radius: 10px;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
         }
         footer {
             text-align: center;
             margin-top: 20px;
             color: #ccc;
-        }
-        .owner-link {
-            color: #1db954;
-            font-weight: bold;
-            text-decoration: none;
-        }
-        .owner-link:hover {
-            text-decoration: underline;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { opacity: 0; }
         }
     </style>
 </head>
@@ -165,34 +92,25 @@
         <button id="searchButton">Search</button>
     </div>
     <div id="results"></div>
-    <audio id="audioPlayer" controls>
-        <source id="audioSource" src="" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-    <div id="errorMessage">Music cannot be found. Please try again.</div>
     <footer>
-        <p>Owned by <a class="owner-link" href="https://www.facebook.com/100091592152325" target="_blank">Jr Busaco</a></p>
+        <p>Owned by <a href="https://www.facebook.com/YOUR_FACEBOOK" target="_blank"><strong>Jr Busaco</strong></a></p>
     </footer>
 
     <script>
         document.getElementById('searchButton').addEventListener('click', async () => {
             const query = document.getElementById('searchInput').value;
             const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
-            if (response.ok) {
-                const data = await response.json();
-                if (data.length > 0) {
-                    displayResults(data);
-                } else {
-                    displayErrorMessage('Music cannot be found. Please try again.');
-                }
-            } else {
-                displayErrorMessage('Music cannot be found. Please try again.');
-            }
+            const data = await response.json();
+            displayResults(data);
         });
 
         function displayResults(data) {
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = '';
+            if (data.length === 0) {
+                resultsDiv.innerHTML = '<p>No results found.</p>';
+                return;
+            }
             data.forEach(song => {
                 const songDiv = document.createElement('div');
                 songDiv.className = 'songDiv';
@@ -204,58 +122,24 @@
                 songImage.src = song.image;
                 songImage.alt = song.name;
 
-                const buttonGroup = document.createElement('div');
-                buttonGroup.className = 'button-group';
-
                 const trackLink = document.createElement('a');
                 trackLink.href = song.track;
                 trackLink.target = '_blank';
                 trackLink.textContent = 'Listen on Spotify';
-                trackLink.className = 'spotify-button';
+                trackLink.className = 'button';
 
                 const downloadButton = document.createElement('a');
                 downloadButton.href = song.download;
                 downloadButton.textContent = 'Download MP3';
-                downloadButton.className = 'download-button';
-
-                const playButton = document.createElement('button');
-                playButton.textContent = 'Play Music';
-                playButton.className = 'play-button';
-                playButton.onclick = () => playMusic(song.download);
-
-                buttonGroup.appendChild(trackLink);
-                buttonGroup.appendChild(downloadButton);
-                buttonGroup.appendChild(playButton);
+                downloadButton.className = 'button';
 
                 songDiv.appendChild(songImage);
                 songDiv.appendChild(songTitle);
-                songDiv.appendChild(buttonGroup);
+                songDiv.appendChild(trackLink);
+                songDiv.appendChild(downloadButton);
                 resultsDiv.appendChild(songDiv);
             });
         }
-
-        function playMusic(url) {
-            const audioPlayer = document.getElementById('audioPlayer');
-            const audioSource = document.getElementById('audioSource');
-            audioSource.src = url;
-            audioPlayer.load();
-            audioPlayer.style.display = 'block';
-            audioPlayer.play();
-        }
-
-        function displayErrorMessage(message) {
-            const errorMessageDiv = document.getElementById('errorMessage');
-            errorMessageDiv.textContent = message;
-            errorMessageDiv.style.display = 'block';
-            errorMessageDiv.style.opacity = '1';
-            setTimeout(() => {
-                errorMessageDiv.style.opacity = '0';
-                setTimeout(() => {
-                    errorMessageDiv.style.display = 'none';
-                }, 500);
-            }, 3000);
-        }
     </script>
 </body>
-</html/>
-    
+</html>
