@@ -1,26 +1,23 @@
 import express from 'express';
 import fetch from 'node-fetch';
-import path from 'path';
+import cors from 'cors';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
+// Middleware
+app.use(cors()); // Enable CORS
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('public')); // Serve static files from the 'public' directory
 
 app.get('/search', async (req, res) => {
     const query = req.query.q;
-
-    if (!query) {
-        return res.status(400).json({ error: 'Query parameter "q" is required.' });
-    }
-
     const apiUrl = `https://hiroshi-rest-api.replit.app/search/spotify?search=${encodeURIComponent(query)}`;
 
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) {
-            throw new Error(`API error: ${response.statusText}`);
+            throw new Error('Network response was not ok');
         }
         const data = await response.json();
         res.json(data);
@@ -28,10 +25,6 @@ app.get('/search', async (req, res) => {
         console.error('Error fetching from API:', error);
         res.status(500).json({ error: 'Failed to fetch data' });
     }
-});
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
