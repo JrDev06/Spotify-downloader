@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import cors from 'cors';
 
 const app = express();
-const PORT = 3000; // Fixed port
+const PORT = 3000; // Fixed port for Render
 
 app.use(cors());
 app.use(express.json());
