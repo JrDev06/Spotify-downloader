@@ -2,7 +2,7 @@ import express from 'express';
 import fetch from 'node-fetch';
 
 const app = express();
-const PORT = 3000; // Using a fixed port for Render compatibility
+const PORT = 3000; 
 
 app.use(express.json());
 app.use(express.static('public'));
