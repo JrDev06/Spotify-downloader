@@ -157,9 +157,8 @@
             100% { opacity: 0; }
         }
     </style>
-    <!-- Google AdSense Code -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4836166986389793"
-     crossorigin="anonymous"></script>
+        crossorigin="anonymous"></script>
 </head>
 <body>
     <h1><i class="fab fa-spotify"></i> Spotify Music Downloader</h1>
@@ -167,19 +166,6 @@
         <input type="text" id="searchInput" placeholder="Search for a song..." />
         <button id="searchButton">Search</button>
     </div>
-    
-    <!-- AdSense Ad Unit -->
-    <div style="text-align:center; margin: 20px 0;">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-4836166986389793"
-             data-ad-slot="1234567890"
-             data-ad-format="auto"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
-
     <div id="results"></div>
     <audio id="audioPlayer" controls>
         <source id="audioSource" src="" type="audio/mpeg">
@@ -191,6 +177,8 @@
     </footer>
 
     <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+
         document.getElementById('searchButton').addEventListener('click', async () => {
             const query = document.getElementById('searchInput').value;
             const response = await fetch(`/search?q=${encodeURIComponent(query)}`);
@@ -246,18 +234,20 @@
                 songDiv.appendChild(songImage);
                 songDiv.appendChild(songTitle);
                 songDiv.appendChild(buttonGroup);
-
                 resultsDiv.appendChild(songDiv);
             });
-            document.getElementById('errorMessage').style.opacity = 0;
         }
 
         function displayErrorMessage(message) {
-            const errorMessageDiv = document.getElementById('errorMessage');
-            errorMessageDiv.textContent = message;
-            errorMessageDiv.style.opacity = 1;
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
             setTimeout(() => {
-                errorMessageDiv.style.opacity = 0;
+                errorMessage.style.opacity = '0';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                    errorMessage.style.opacity = '1';
+                }, 500);
             }, 3000);
         }
 
@@ -269,6 +259,20 @@
             audioPlayer.load();
             audioPlayer.play();
         }
+
+        function displayErrorMessage(message) {
+            const errorMessageDiv = document.getElementById('errorMessage');
+            errorMessageDiv.textContent = message;
+            errorMessageDiv.style.display = 'block';
+            errorMessageDiv.style.opacity = '1';
+            setTimeout(() => {
+                errorMessageDiv.style.opacity = '0';
+                setTimeout(() => {
+                    errorMessageDiv.style.display = 'none';
+                }, 500);
+            }, 3000);
+        }
     </script>
+
 </body>
 </html>
